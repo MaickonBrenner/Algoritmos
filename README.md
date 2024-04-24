@@ -1,2 +1,2 @@
-# Algoritmos_Java
- Algoritmos na Linguagem Java
+# Algoritmos
+ Repositório para Algoritmos em Geral
