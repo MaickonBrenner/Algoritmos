@@ -2,6 +2,10 @@ USE cadastro_usuarios;
 
 SELECT * FROM cursos;
 
+SELECT * FROM gafanhotos;
+
+SELECT * FROM gafanhotos WHERE sexo = "F";
+
 SELECT * FROM cursos ORDER BY nome;
 
 SELECT * FROM cursos ORDER BY nome DESC;
@@ -32,3 +36,88 @@ SELECT * FROM cursos WHERE nome LIKE "%a";
 SELECT * FROM cursos WHERE nome LIKE "%a%";
 
 SELECT * FROM cursos WHERE nome NOT LIKE "%a%";
+
+#SUBLINHADO: obriga ter pelo menos um caractere
+SELECT * FROM cursos WHERE nome LIKE "%ph%p_";
+
+SELECT * FROM cursos WHERE nome LIKE "%p_p%";
+
+SELECT * FROM cursos WHERE nome LIKE "%ph%p_";
+
+#Distinguindo - Mostra apenas uma vez objeto repetido
+SELECT DISTINCT carga FROM cursos ORDER BY carga;
+#Paises cadastrados na tabela
+SELECT DISTINCT nacionalidade FROM gafanhotos;
+
+SELECT DISTINCT nacionalidade FROM gafanhotos ORDER BY nacionalidade;
+
+SELECT COUNT(*) AS Quantidade_Cursos FROM cursos;
+
+SELECT COUNT(*) AS Cursos_Acima_40h FROM cursos WHERE carga > 40;
+
+SELECT MAX(carga) AS Maior_Carga_Horaria FROM cursos;
+
+SELECT MAX(totaulas) AS Total_Horas_Maximas FROM cursos WHERE ano = "2016";
+
+SELECT nome, MIN(totaulas) AS Total_Horas_Maximas FROM cursos WHERE ano = "2016";
+
+SELECT SUM(totaulas) AS Total_Aulas FROM cursos WHERE ano = "2016";
+
+SELECT AVG(totaulas) AS Media_Total_Aulas FROM cursos WHERE ano = "2016";
+
+#1 - Lista de todas as alunas do banco
+SELECT * FROM gafanhotos WHERE sexo = "F" ORDER BY nome;
+#2 - Lista com os dados de todos que nasceram entre 1 Jan 2000 e 31 Dez 2015
+SELECT * FROM gafanhotos WHERE nascimento BETWEEN "2000-01-01" AND "2015-12-31" ORDER BY nome;
+#3 - Lista com homens que são programadores
+SELECT * FROM gafanhotos WHERE sexo = "M" AND profissao = "Programador" ORDER BY nome;
+#4 - Listar todas as mulheres brasileiras e que comecem com J
+SELECT * FROM gafanhotos WHERE nacionalidade = "Brasil" AND nome LIKE "J%";
+#5 - Listar nome e nacionalidade de todos os homens que tem Silva no nome, não são Brasil, e pesam 100kg
+SELECT nome, nacionalidade FROM gafanhotos WHERE nacionalidade NOT LIKE "Brasil" AND nome LIKE "%Silva%" AND peso <= "100" AND sexo = "M";
+#6 - Qual a maior altura entre os homens que moram no Brasil
+SELECT MAX(altura) AS Maior_Altura_Homens FROM gafanhotos WHERE nacionalidade = "Brasil" AND sexo = "M";
+#7 - Qual a media de peso entre todos os cadastrados
+SELECT AVG(peso) FROM gafanhotos;
+#8 - Qual a menor peso entre mulheres que nasceram fora do brasil e entre 1 Jan 1990 e 31 Dez 2000
+SELECT MIN(peso) AS Menor_Peso FROM gafanhotos WHERE sexo = "F" AND nacionalidade NOT LIKE "Brasil" AND nascimento BETWEEN "1990-01-01" AND "2000-12-01" ORDER BY nome;
+#9 - Quantas mulheres tem mais de 1,90 de altura
+SELECT COUNT(altura) AS Mulheres_Maiores_1_90 FROM gafanhotos WHERE altura >= "1.90" AND sexo = "F";
+
+SELECT carga AS Cargas_Horarias FROM cursos GROUP BY carga ORDER BY carga;
+
+SELECT carga AS Cargas_Horarias, COUNT(nome) AS Quantidade FROM cursos GROUP BY carga ORDER BY carga;
+
+SELECT totaulas, COUNT(*) AS Quantidade FROM cursos GROUP BY totaulas ORDER BY totaulas;
+
+SELECT carga, totaulas, COUNT(*) AS Quantidade FROM cursos WHERE totaulas = 30 GROUP BY carga;
+
+SELECT carga, COUNT(nome) AS Quantidade FROM cursos GROUP BY carga HAVING COUNT(nome) > 3;
+
+SELECT ano, COUNT(*) AS Quantidade FROM cursos GROUP BY ano HAVING COUNT(*) >= 5 ORDER BY COUNT(*) DESC;
+
+SELECT AVG(carga) FROM cursos;
+
+SELECT carga, COUNT(*) AS Quantidade FROM cursos WHERE ano > 2015 GROUP BY carga HAVING carga > (SELECT AVG(carga) FROM cursos);
+
+#1 - Lista de Profissão dos gafanhotos e Quantidades 
+SELECT profissao, COUNT(profissao) AS Quantidade FROM gafanhotos GROUP BY profissao;
+
+#2 - Lista quantos homens e quantas mulher nasceram após 01 Jan 2005
+SELECT sexo, COUNT(*) AS Quantidade FROM gafanhotos WHERE nascimento > '2005-01-01' GROUP BY sexo;
+
+SELECT
+(SELECT COUNT(*) FROM gafanhotos WHERE sexo LIKE 'M' AND nascimento > '2005-01-01') AS Masculino,
+(SELECT COUNT(*) FROM gafanhotos WHERE sexo LIKE 'F' AND nascimento > '2005-01-01') AS Feminino;
+
+#3 - Lista de gafanhotos que nasceram fora do Brasil, mostrado o pais e o total nascidas lá, somente mais de 3 com a nascionlidade
+SELECT nome, nacionalidade FROM gafanhotos WHERE nacionalidade NOT LIKE 'Brasil';
+
+SELECT nacionalidade, COUNT(nacionalidade) AS Nacionalidade FROM gafanhotos WHERE nacionalidade NOT LIKE 'Brasil' GROUP BY nacionalidade;
+
+SELECT nacionalidade, COUNT(nacionalidade) AS Nacionalidade FROM gafanhotos WHERE nacionalidade NOT LIKE 'Brasil' 
+GROUP BY nacionalidade HAVING COUNT(nacionalidade) >= 3;
+
+#4 - Lista agrupada pela altura mostrando quantas pessoas pesam mais de 100kg e estao acima da media de altura
+SELECT COUNT(altura) AS Quantidade FROM gafanhotos WHERE peso >= 100
+GROUP BY altura HAVING COUNT(altura) > (SELECT AVG(altura) FROM gafanhotos);
