@@ -17,3 +17,9 @@ UPDATE personagem SET vida = '120', mana = '40' WHERE nome LIKE 'Thorin' AND per
 
 SELECT nome, tipo FROM item WHERE tipo LIKE 'arma';
 
+#Questao 5
+
+UPDATE item SET tipo = 'Arma especial' WHERE tipo LIKE 'Espada%';
+
+SELECT nome FROM personagem
+INNER JOIN ;
