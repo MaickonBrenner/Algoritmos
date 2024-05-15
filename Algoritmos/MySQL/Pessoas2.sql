@@ -121,3 +121,45 @@ GROUP BY nacionalidade HAVING COUNT(nacionalidade) >= 3;
 #4 - Lista agrupada pela altura mostrando quantas pessoas pesam mais de 100kg e estao acima da media de altura
 SELECT COUNT(altura) AS Quantidade FROM gafanhotos WHERE peso >= 100
 GROUP BY altura HAVING COUNT(altura) > (SELECT AVG(altura) FROM gafanhotos);
+
+# FOREIGN KEYS E JOIN
+DESCRIBE gafanhotos;
+
+ALTER TABLE gafanhotos ADD COLUMN cursopreferido INT;
+ALTER TABLE gafanhotos ADD FOREIGN KEY (cursopreferido) REFERENCES cursos(idcurso);
+
+SELECT * FROM gafanhotos;
+SELECT * FROM cursos;
+
+UPDATE gafanhotos SET cursopreferido = '6' WHERE id = '1';
+
+SELECT nome, cursopreferido FROM gafanhotos;
+SELECT nome, ano FROM cursos;
+
+SELECT g.nome, c.nome, c.ano FROM gafanhotos AS g INNER JOIN cursos AS c ON c.idcurso = g.cursopreferido ORDER BY g.nome;
+#LEFT OUTER JOIN
+SELECT g.nome, c.nome, c.ano FROM gafanhotos AS g LEFT JOIN cursos AS c ON c.idcurso = g.cursopreferido;
+#RIGHT OUTER JOIN
+SELECT g.nome, c.nome, c.ano FROM gafanhotos AS g RIGHT JOIN cursos AS c ON c.idcurso = g.cursopreferido;
+
+CREATE TABLE gafanhoto_assiste_curso (
+	id INT NOT NULL AUTO_INCREMENT,
+    data date,
+    idgafanhoto INT,
+    idcurso INT,
+    PRIMARY KEY (id),
+    FOREIGN KEY (idgafanhoto) REFERENCES gafanhotos(id),
+    FOREIGN KEY (idcurso) REFERENCES cursos(idcurso)
+);
+
+SELECT * FROM gafanhoto_assiste_curso;
+
+INSERT INTO gafanhoto_assiste_curso VALUES
+(DEFAULT, '2014-03-01', '1', '2');
+
+SELECT g.nome, c.nome FROM gafanhotos AS g
+INNER JOIN gafanhoto_assiste_curso AS a
+ON g.id = a.idgafanhoto
+INNER JOIN cursos AS c
+ON c.idcurso = a.idcurso
+ORDER BY g.nome;
