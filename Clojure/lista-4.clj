@@ -141,15 +141,28 @@
 
 ; 1094 - Experiências
 (defn checkTotal [lista]
-  (reduce + (map (fn [x] (nth x 0)) lista)))
+  (reduce + (map (fn [x] (first x)) lista)))
 
 (defn coelhoTotal [lista]
-  (reduce + ()))
+  (reduce + (map (fn [x] (if (= (second x) "C") (first x) 0)) lista)))
+
+(defn ratoTotal [lista]
+  (reduce + (map (fn [x] (if (= (second x) "R") (first x) 0)) lista)))
+
+(defn sapoTotal [lista]
+  (reduce + (map (fn [x] (if (= (second x) "S") (first x) 0)) lista)))
 
 (defn main []
-  (def n (read))
-  (def valores (repeatedly n #(doall (repeatedly 2 read))))
-  (println (format "Total: %d cobaias" (checkTotal valores))))
+  (let [n (Integer/parseInt (read-line))
+        valores (repeatedly n #(let [num-tipo (clojure.string/split (read-line) #" ")]
+                                 [(Integer/parseInt (first num-tipo)) (second num-tipo)]))]
+    (println (format "Total: %d cobaias" (checkTotal valores)))
+    (println (format "Total de coelhos: %d" (coelhoTotal valores)))
+    (println (format "Total de ratos: %d" (ratoTotal valores)))
+    (println (format "Total de sapos: %d" (sapoTotal valores)))
+    (println (format "Percentual de coelhos: %.2f" (double (/ (* (coelhoTotal valores) 100) (checkTotal valores)))) "%")
+    (println (format "Percentual de ratos: %.2f" (double (/ (* (ratoTotal valores) 100) (checkTotal valores)))) "%")
+    (println (format "Percentual de sapos: %.2f" (double (/ (* (sapoTotal valores) 100) (checkTotal valores)))) "%")))
 
 (main)
 
